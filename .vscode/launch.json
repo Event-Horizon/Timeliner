@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [{
+        "name": "Launch Debug new Chrome Window",
+        "type": "chrome",
+        "request": "launch",
+        "file": "${workspaceRoot}/timeline.html",
+        "sourceMaps": true,
+        "webRoot": "${workspaceRoot}",
+        "runtimeArgs": [
+            "--new-window", //Open in new window
+            "--user-data-dir=C:/dev/", //Can be any directory. Makes chrome load in a different directory so that it opens in a new instance.
+            "--remote-debugging-port=9222" //Open in port 9222 (standard chrome debug port)
+        ]
+    }]
+}
