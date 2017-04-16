@@ -4,7 +4,7 @@ This was a project I worked on for keeping track of timelines in 2015/2016 , pro
 
 # Using
 
-Open timeline.html, go to Create or Bulk tab to start a timeline.
+Open index.html, go to Create or Bulk tab to start a timeline.
 
 ## Create Tab
 
