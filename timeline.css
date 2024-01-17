@@ -1,3 +1,6 @@
+:root{
+    --spacer:1rem;
+}
 .noresize {
   resize: none; 
 }
@@ -13,4 +16,8 @@
 }
 .container .text-muted{
   margin:20px 0px;
+}
+.mx-1{
+    margin-left: calc(var(--spacer) * .25) !important;
+    margin-right: calc(var(--spacer) * .25) !important;
 }

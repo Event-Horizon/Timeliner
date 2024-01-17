@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+  <title>Timeliner</title>
   <!--META-->
   <meta name="author" content="Chasten Foster">
   <meta name="description" content="">
@@ -23,13 +23,19 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
   <!--SCRIPTS-->
-  <script type="text/javascript" src=".\timeline.js"></script>
+  <!-- <script type="text/javascript" src=".\timeline.js"></script> -->
+  <script type="module"  src=".\main.js"></script>
 </head>
 
 <body>
   <div class="container">
     <div class="page-header">
-      <h1>Timeline Tool <small>Search and Add to Timeline</small></h1>
+      <div class="container">
+        <div class="row">
+            <h1 class="col-md-10">Timeliner<small> Keep track of your timelines!</small></h1>
+            <img class="col-md-2" src="/resources/images/timeline_project.svg"/>
+        </div>
+      </div>
     </div>
 
     <div id="alert" class="hidden alert alert-warning" role="alert"><button id="alertClose" class="close"><span>&times;</span></button><span></span></div>
@@ -71,7 +77,7 @@
                           <div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
                             </span>
-                            <input id="dateField" type="text" class="form-control" type="date" />
+                            <input id="dateField" class="form-control" type="date" />
                           </div>
                           <!-- /input-group -->
                         </td>
@@ -81,7 +87,7 @@
                         <td><div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>
                             </span>
-                            <input id="timeField" type="text" class="form-control" type="time" />
+                            <input id="timeField" class="form-control" type="time" />
                           </div>
                           <!-- /input-group -->
                         </td>
@@ -101,7 +107,7 @@
                   <div class="col-md-12">
                     <textarea id="bulkField" placeholder="Bulk String" class="form-control noresize" rows="5" aria-describedby="helpBlock"></textarea>
                     <span id="helpBlock" class="help-block">Submit a bulk creation for one day in the format of:</span>
-                    <pre>mm/dd/yyyy
+                    <pre>yyyy-mm-dd
 hh:mm am/pm | description
 hh:mm am/pm | description
 hh:mm am/pm | description</pre>
@@ -168,7 +174,7 @@ hh:mm am/pm | description</pre>
   <div class="navbar"></div>
   <footer class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">
-      <p class="text-muted">Copyright &copy; 2016</p>
+      <p class="text-muted">Copyright &copy; 2024 Event_Horizon/Event-Horizon</p>
     </div>
   </footer>
   <!--END PAGE JS-->
