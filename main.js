@@ -78,7 +78,7 @@ class Timeline{
  * Returns a new ConnectedItems object
  * @returns {ConnectedItems}
  */
-function refreshConnected(){
+function refreshConnectedGUI(){
     let result={};
 
     result.searchField = document.querySelector("#searchField");
@@ -113,24 +113,6 @@ function newEventMap(element,callback,type){
     result.type=type;
 
     return result;
-}
-
-/**
- * Connects events to elements
- * @param {ConnectedItems} connected
- * @param {Array} eventMappings
- * @returns {void}
-*/
-function mapConnectedToEvents(connected,eventMappings){
-    for (const [key, value] of Object.entries(connected)) {
-        for(let eventMap of eventMappings){
-            // console.log(eventMap)
-            if(eventMap.element === key){
-                // console.log("true",key);
-                connected[key].addEventListener(eventMap.type,eventMap.callback);
-            }
-        }
-    }
 }
 
 function formatTo12hours(t){
@@ -375,7 +357,7 @@ function main(){
 
     console.log(appState);
 
-    let guiElements=refreshConnected();
+    let guiElements=refreshConnectedGUI();
 
     guiElements.searchField.addEventListener("keyup",searchTriggered.bind(this,guiElements.outputEl,guiElements.searchField,appState));
     guiElements.searchBut.addEventListener("click",searchTriggered.bind(this,guiElements.outputEl,guiElements.searchField,appState));

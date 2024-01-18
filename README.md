@@ -2,9 +2,13 @@
 
 This was a project I worked on for keeping track of timelines in 2015/2016 , project was basically to keep track of crime timelines on TV shows etc.
 
+I have refactored the JS in this project to be a bit more modern as of 1/27/2024.
+
 # Using
 
-Open index.html, go to Create or Bulk tab to start a timeline.
+This now requires a **Server** due to utilizing Temporal.js polyfill and module importing.
+
+Open index.html via a local Server, go to Create or Bulk tab to start a timeline.
 
 ## Create Tab
 
@@ -35,5 +39,5 @@ Open index.html, go to Create or Bulk tab to start a timeline.
  
  Format for load string needs to be:
  
-	[{"day":"MM/DD/YYYY","time":"HH:MM AM ","desc":" Testing"},
-	{"day":"MM/DD/YYYY","time":"HH:MM PM ","desc":" Testing"}]
+	[{"date":"MM/DD/YYYY","time":"HH:MM AM ","description":" Testing"},
+	{"date":"MM/DD/YYYY","time":"HH:MM PM ","description":" Testing"}]
