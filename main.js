@@ -199,17 +199,17 @@ function updateAlert(alertElement, text, autohide) {
     }
 }
 
-function search(text,timelineItemsState) {    
-    // console.log(text,timelineItemsState);
-    let searchResults = timelineItemsState.filter((item)=>{
-        return item.description.match(text) || item.date == text || item.time == text;
+function search(text,itemsList,locale="en-US") {    
+    console.log(text,itemsList);
+    let searchResults = itemsList.filter((item)=>{
+        return item.description.match(text) || item.date.toLocaleString(locale) == text || item.time.toString() == text;
     });
     return searchResults;
 };
 
-function searchTriggered(outputElement,inputElement,timelineItemsState,e){       
-    let results=search.call(this,inputElement.value,timelineItemsState);
-    updateOutput(outputElement,results);
+function searchTriggered(outputElement,inputElement,globalState,e){       
+    let results=search.call(this,inputElement.value,globalState.timeline.items,globalState.locale);
+    updateOutput(outputElement,{timeline:{items:results}});
     return;
 }
 
@@ -218,7 +218,8 @@ function closeAlertClick(e){
     return;
 }
 
-function updateOutput(outputElement, timelineItemsState){    
+function updateOutput(outputElement, globalState){    
+    let timelineItemsState=globalState.timeline.items;
     let dates = {};
     outputElement.innerHTML = "";//reset
     timelineItemsState.forEach(function(timelineItem) {
@@ -238,7 +239,7 @@ function updateOutput(outputElement, timelineItemsState){
         tempSpanEl.classList.add("glyphicon","glyphicon-calendar");
         //since we are grouping times by their date, we ignore each entries preferred date format
         //and instead we go with the app global format
-        tempDateEl.append(tempSpanEl,document.createTextNode(" "+key.toLocaleString("en-US")));
+        tempDateEl.append(tempSpanEl,document.createTextNode(" "+key.toLocaleString(globalState.locale)));
         
         let tempItemEl = document.createElement("ul");
         tempItemEl.classList.add("list-group","row","mx-1");
@@ -294,11 +295,11 @@ function createItemTriggered(alertElement,dateElement,timeElement,descElement,ou
     }
     //if checks were good, continue  
     createItem(dateValue,timeValue,descValue,globalState);
-    updateOutput(outputElement,globalState.timeline.items);
+    updateOutput(outputElement,globalState);
 }
 
 function createBulkTriggered(alertElement,inputElement,outputElement,globalState,e){
-    let regexDateValidation=/\d{4}\-\d{2}\-\d{2}/igm;
+    let regexDateValidation=/\d{2}\/\d{2}\/\d{4}/igm;
     let regexTimeValidation=/\d{1,2}\:\d{2}/igm;
     let text=inputElement.value;
     let dateValue=text.split("\n")[0];
@@ -316,9 +317,11 @@ function createBulkTriggered(alertElement,inputElement,outputElement,globalState
     });
 
     if(!dateValue.match(regexDateValidation)){
-        updateAlert(alertElement,"Your date input did not match the format of YYYY/MM/DD");
+        updateAlert(alertElement,"Your date input did not match the format of MM/DD/YYYY");
         return;
     }
+    dateValue=dateValue.split("/");
+    dateValue=Temporal.PlainDate.from({month:dateValue[0],day:dateValue[1],year:dateValue[2]});
 
     for(let timeItem of timeItemList){
         if(!timeItem.time.match(regexTimeValidation)){			
@@ -327,7 +330,7 @@ function createBulkTriggered(alertElement,inputElement,outputElement,globalState
         }
         createItem(dateValue,timeItem.time,timeItem.description,globalState);
     }
-    updateOutput(outputElement,globalState.timeline.items);
+    updateOutput(outputElement,globalState);
 }
 
 function saveTriggered(saveInputElement,saveOutputElement,alertElement,globalState){
@@ -348,7 +351,7 @@ function loadTriggered(loadInputField,outputElement,alertElement,globalState){
 
     (loadString) ? globalState.timeline.items = loadString: updateAlert(alertElement,"Error load string not parsing.", false);
     globalState.timeline.validateAndFormat();
-    updateOutput(outputElement,globalState.timeline.items);
+    updateOutput(outputElement,globalState);
 }
 
 function main(){
@@ -359,6 +362,7 @@ function main(){
     const theTime2 = Temporal.PlainTime.from('T01:17Z');
 
     window.appState={
+        locale:"en-US",
         timeline:new Timeline(
             new TimelineItem(theDate,theTime,"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Amet commodo nulla facilisi nullam vehicula. Ornare arcu dui vivamus arcu felis. Quis blandit turpis cursus in hac habitasse platea dictumst. At in tellus integer feugiat scelerisque varius. Vitae nunc sed velit dignissim sodales. Justo donec enim diam vulputate ut pharetra sit. Posuere morbi leo urna molestie at elementum eu facilisis sed. Justo nec ultrices dui sapien eget mi. Nunc consequat interdum varius sit amet mattis.","en-US",24),
             new TimelineItem(theDate,theTime,"Testing2"),
@@ -373,15 +377,15 @@ function main(){
 
     let guiElements=refreshConnected();
 
-    guiElements.searchField.addEventListener("keyup",searchTriggered.bind(this,guiElements.outputEl,guiElements.searchField,appState.timeline.items));
-    guiElements.searchBut.addEventListener("click",searchTriggered.bind(this,guiElements.outputEl,guiElements.searchField,appState.timeline.items));
+    guiElements.searchField.addEventListener("keyup",searchTriggered.bind(this,guiElements.outputEl,guiElements.searchField,appState));
+    guiElements.searchBut.addEventListener("click",searchTriggered.bind(this,guiElements.outputEl,guiElements.searchField,appState));
     guiElements.alertClose.addEventListener("click",closeAlertClick);
     guiElements.createBut.addEventListener("click",createItemTriggered.bind(this,guiElements.alertDiv,guiElements.dateField,guiElements.timeField,guiElements.descField,guiElements.outputEl,appState));
     guiElements.bulkBut.addEventListener("click",createBulkTriggered.bind(this,guiElements.alertDiv,guiElements.bulkField,guiElements.outputEl,appState));
     guiElements.saveBut.addEventListener("click",saveTriggered.bind(this,guiElements.saveField,guiElements.saveStringField,guiElements.alertDiv,appState));
     guiElements.loadBut.addEventListener("click",loadTriggered.bind(this,guiElements.loadField,guiElements.outputEl,guiElements.alertDiv,appState));
 
-    updateOutput(guiElements.outputEl, appState.timeline.items);
+    updateOutput(guiElements.outputEl, appState);
     updateAlert(guiElements.alertClose, "No items in timeline yet.", true);
 
 
